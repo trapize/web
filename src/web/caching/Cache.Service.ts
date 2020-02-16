@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { ICacheService } from '../ICache.Service';
-import  NodeCache  from 'node-cache';
-import { Core, IAppConfig } from '@trapize/core';
+import { Core, IAppConfig, IMemoryCacheFactory, IMemoryCache } from '@trapize/core';
 
 /**
  *
@@ -16,10 +15,10 @@ export class CacheService implements ICacheService {
      *
      *
      * @private
-     * @type {NodeCache}
+     * @type {IMemoryCache}
      * @memberof CacheService
      */
-    private cache: NodeCache;
+    private cache: IMemoryCache;
 
     /**
      *Creates an instance of CacheService.
@@ -27,9 +26,10 @@ export class CacheService implements ICacheService {
      * @memberof CacheService
      */
     public constructor(
-        @inject(Core.Configuration.IAppConfig) private appConfig: IAppConfig
+        @inject(Core.Configuration.IAppConfig) private appConfig: IAppConfig,
+        @inject(Core.Runtime.IMemoryCacheFactory) factory: IMemoryCacheFactory
     ) {
-        this.cache = new NodeCache(this.appConfig.cacheOptions);
+        this.cache = factory.Create(this.appConfig.cacheOptions);
     }
 
     /**
@@ -40,7 +40,6 @@ export class CacheService implements ICacheService {
      * @memberof CacheService
      */
     public async get(key: string): Promise<any> {
-        this.cache.ttl(key);
         return this.cache.get(key);
     }    
     
