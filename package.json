@@ -5,6 +5,10 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/trapize/web.git"
+  },
   "main": "dist/index.js",
   "scripts": {
     "preflight": "npm run build && npm run lint && npm test",
@@ -37,7 +41,7 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@trapize/core": "^1.0.3",
+    "@trapize/core": "1.x.x",
     "express": "^4.17.1",
     "inversify": "^5.0.1",
     "mysql": "^2.18.0",
