@@ -23,3 +23,10 @@ jobs:
     - run: npm test
       env:
         CI: true
+    - name: Upload npm error
+      if: failure()
+      uses: actions/upload-artifact@v1
+      with:
+        name: 'npm_log'
+        path: '/home/runner/.npm/_logs'
+    
