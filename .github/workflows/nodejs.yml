@@ -17,9 +17,20 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@trapize'
+    - run: npm ci --ignore-scripts
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - run: npm run build --if-present
     - run: npm run lint --if-present
     - run: npm test
       env:
         CI: true
+    - name: Upload npm error
+      if: failure()
+      uses: actions/upload-artifact@v1
+      with:
+        name: 'npm_log'
+        path: '/home/runner/.npm/_logs'
+    

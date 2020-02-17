@@ -1,9 +1,13 @@
 {
   "name": "@trapize/web",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trapize/web.git"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -25,9 +29,7 @@
     "@babel/preset-typescript": "^7.8.3",
     "@types/express": "^4.17.2",
     "@types/jest": "^24.9.0",
-    "@types/mysql": "^2.15.8",
     "@types/node": "^13.1.8",
-    "@types/uuid": "^3.4.6",
     "gulp": "^4.0.0",
     "gulp-clean": "^0.4.0",
     "gulp-typescript": "^6.0.0-alpha.1",
@@ -37,13 +39,10 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "@trapize/core": "^1.0.3",
+    "@trapize/core": "^1.0.4",
     "express": "^4.17.1",
     "inversify": "^5.0.1",
-    "mysql": "^2.18.0",
-    "node-cache": "^5.1.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.5.4",
-    "uuid": "^3.4.0"
+    "rxjs": "^6.5.4"
   }
 }
