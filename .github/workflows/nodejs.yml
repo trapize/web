@@ -20,6 +20,8 @@ jobs:
         registry-url: 'https://npm.pkg.github.com'
         scope: '@trapize'
     - run: npm ci --ignore-scripts
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - run: npm run build --if-present
     - run: npm run lint --if-present
     - run: npm test
