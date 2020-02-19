@@ -38,5 +38,5 @@ export {
 export * from './caching';
 export { HttpActionResult } from './action-results';
 export * from './validation';
-import * as Web from './Web.Symbols';
+import { WebSymbols as Web } from './Web.Symbols';
 export { Web }
