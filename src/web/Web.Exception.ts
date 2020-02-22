@@ -46,7 +46,12 @@ export class UnhandledException extends WebException {
     }
 }
 
+export class UnauthorizedException extends WebException {
+    protected _code: 401;
+}
+
 export const WebExceptions = {
     InvalidRouteDefinitionException: InvalidRouteDefinitionException,
-    UnhandledException: UnhandledException
+    UnhandledException: UnhandledException,
+    UnauthorizedException
 }
