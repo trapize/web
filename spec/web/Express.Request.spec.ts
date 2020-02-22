@@ -21,7 +21,8 @@ const eReq = {
     },
     get user(): any {
         return user
-    }
+    },
+    get: jest.fn()
 };
 
 describe('Express Request', () => {
@@ -32,7 +33,7 @@ describe('Express Request', () => {
         const methodSpy = jest.spyOn(eReq, 'method', 'get');
         const userSpy = jest.spyOn(eReq, 'user', 'get');
         const user_idSpy = jest.spyOn(user, 'user_id', 'get');
-
+        eReq.get.mockReturnValue('text/plain');
         const req = new ExpressRequest(<any>eReq);
         const body = req.body;
         const query = req.query;
@@ -41,6 +42,8 @@ describe('Express Request', () => {
         const userId = req.get('user', 'user_id');
         const userUnknownProp = req.get('user', 'unknown', 'furtherUnknown');
         const uuid = req.uuid;
+        expect(req.getHeader('content-type')).toBe('text/plain');
+        expect(eReq.get).toHaveBeenCalledWith('content-type');
 
         expect(body).toBeDefined();
         expect(query).toBeDefined();

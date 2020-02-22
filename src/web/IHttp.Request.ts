@@ -50,4 +50,14 @@ export interface IHttpRequest {
      * @memberof IHttpRequest
      */
     get(...keys: string[]): any | undefined;
+
+
+    /**
+     *
+     *
+     * @param {string} name
+     * @returns {string}
+     * @memberof IHttpRequest
+     */
+    getHeader(name: string): string | undefined;
 }

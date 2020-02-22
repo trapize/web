@@ -78,4 +78,16 @@ export class ExpressRequest implements IHttpRequest {
     public get(...keys: string[]): any | undefined {
         return keys.reduce((val: any, key: string) => val?.[key], this.req);
     }
+
+
+    /**
+     *
+     *
+     * @param {string} name
+     * @returns {(string | undefined)}
+     * @memberof ExpressRequest
+     */
+    public getHeader(name: string): string | undefined {
+        return this.req.get(name);
+    }
 }
