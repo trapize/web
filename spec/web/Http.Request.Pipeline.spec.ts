@@ -45,6 +45,7 @@ class MockRequest implements IHttpRequest {
     public constructor(public method: HttpMethod) {}
 
     get = jest.fn();
+    getHeader = jest.fn();
 }
 
 class MockResponse implements IHttpResponse {
