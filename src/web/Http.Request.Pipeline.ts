@@ -14,7 +14,8 @@ import { IHttpActionResult } from './IHttp.Action.Result';
 import { Observable } from 'rxjs';
 import { Validation } from './validation';
 import { HttpActionResult } from './action-results';
-import { WebExceptions } from './Web.Exception';
+import { WebExceptions, UnauthorizedException } from './Web.Exception';
+import { IHttpUser } from './IHttp.User';
 
 /**
  *
@@ -88,7 +89,16 @@ export class HttpRequestPipeline implements IHttpRequestPipeline {
     private async GetActionResult(request: IHttpRequest, response: IHttpResponse, route: IHttpRoute<any>, container: Container): Promise<IHttpActionResult> {
         request.uuid = this.unique.uuid();
         this.logger.Log(`Begin Request - ${request.uuid} - ${route.method} ${route.path}`, request.body, request.params, request.query);
-        const user = await this.authentication.Authenticate(request);
+        let user: IHttpUser | undefined;
+        try {
+            user = await this.authentication.Authenticate(request);
+        } catch(e) {
+            if(e instanceof UnauthorizedException) {
+                return HttpActionResult.ClientError.Unauthorized();
+            } else {
+                return HttpActionResult.ServerError.InternalServerError(e);
+            }
+        }
         const allow = await this.authentication.Allow(user, route.authenticationStrategy);
 
         if(!allow) {

@@ -9,6 +9,7 @@ import { IHttpRoute } from '../../src/web/IHttp.Route';
 import { of, throwError } from 'rxjs';
 import { Validation } from '../../src/web/validation';
 import { ResultExceptions, Exception } from '@trapize/core';
+import { UnauthorizedException, WebExceptions } from '../../src/web';
 
 const authenticationService = {
     Authenticate: jest.fn(),//(request: IHttpRequest): Promise<IHttpUser>;
@@ -80,6 +81,66 @@ function Pipeline(): IHttpRequestPipeline {
 }
 
 describe('Http Request Pipeline', () => {
+    it('Should return unauthorized', async () => {
+        const req = new MockRequest('GET');
+        const res = new MockResponse();
+        const container = new Container();
+        const controllerSymbol = 'Controller';
+        container.bind(controllerSymbol).toConstantValue(controller);
+        const route = <IHttpRoute<any>>{
+            path: 'path',
+            method: 'GET',
+            action: 'action',
+            controller: <any>controllerSymbol,
+            authenticationStrategy: {AllowAnnonymous: false},
+            authorizationStrategy: {RoleStrategy: 'ANY'},
+            cacheStrategy: undefined,
+            roles: []
+        };
+        uniqueService.uuid.mockReturnValue('uniqueId');
+        authenticationService.Authenticate.mockImplementation(req => {
+            return Promise.reject(new UnauthorizedException());
+        });
+        authenticationService.Allow.mockReturnValue(Promise.resolve(false));
+
+        
+        const pipeline = Pipeline();
+        await pipeline.Execute(req, res, route, container);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.send).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should return internal server error', async () => {
+        const req = new MockRequest('GET');
+        const res = new MockResponse();
+        const container = new Container();
+        const controllerSymbol = 'Controller';
+        container.bind(controllerSymbol).toConstantValue(controller);
+        const route = <IHttpRoute<any>>{
+            path: 'path',
+            method: 'GET',
+            action: 'action',
+            controller: <any>controllerSymbol,
+            authenticationStrategy: {AllowAnnonymous: false},
+            authorizationStrategy: {RoleStrategy: 'ANY'},
+            cacheStrategy: undefined,
+            roles: []
+        };
+        uniqueService.uuid.mockReturnValue('uniqueId');
+        authenticationService.Authenticate.mockImplementation(req => {
+            return Promise.reject(new WebExceptions.UnhandledException());
+        });
+        authenticationService.Allow.mockReturnValue(Promise.resolve(false));
+
+        
+        const pipeline = Pipeline();
+        await pipeline.Execute(req, res, route, container);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.send).toHaveBeenCalledTimes(1);
+    });
+
     it('Should return unauthorized', async () => {
         const req = new MockRequest('GET');
         const res = new MockResponse();
