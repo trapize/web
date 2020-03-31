@@ -19,21 +19,7 @@ export { IHttpUser } from './IHttp.User';
 export { RoleAuthorizationService } from './Role.Authorization.Service';
 export { ControllerAction } from './Controller.Action';
 export * from './Web.Exception';
-export {
-    HttpController,
-    HttpGet,
-    HttpPut,
-    HttpPost,
-    HttpPatch,
-    HttpDelete,
-    HttpHead,
-    HttpOptions,
-    Authenticate,
-    Authorize,
-    Cache,
-    GetRoutesFunction,
-    GetRoutes
-} from './Route.Functions';
+export * from './Route.Functions';
 
 export * from './caching';
 export { HttpActionResult } from './action-results';
