@@ -3,6 +3,7 @@ import { ExpressApplication } from '../../src/web/Express.Application';
 import { IAuthenticationStrategy } from '../../src/web/IAuthentication.Strategy';
 import { IAuthorizationStrategy } from '../../src/web/IAuthorization.Strategy';
 import { ICacheStrategy } from '../../src/web/ICache.Strategy';
+import { ILogger } from '@trapize/core';
 
 const application = {
     use: jest.fn(),
@@ -26,6 +27,14 @@ const pipeline = {
     Execute: jest.fn()
 }
 
+const logger: ILogger = {
+    Info: jest.fn(),
+    Debug: jest.fn(),
+    Warn: jest.fn(),
+    Error: jest.fn(),
+    Log: jest.fn()
+};
+
 beforeEach(() => {
     application.use.mockReset();
     application.get.mockReset();
@@ -38,6 +47,11 @@ beforeEach(() => {
     application.listen.mockReset();
     pipeline.Execute.mockReset();
     GetRoutes.mockClear();
+    (<any>logger.Info).mockReset();
+    (<any>logger.Debug).mockReset();
+    (<any>logger.Warn).mockReset();
+    (<any>logger.Error).mockReset();
+    (<any>logger.Log).mockReset();
 });
 
 const authStrategy = {
@@ -55,6 +69,7 @@ const cacheStrategy = {
     }
 };
 
+
 class TestApp extends ExpressApplication {
     protected readonly DefaultAuthentication: IAuthenticationStrategy = authStrategy;
     protected readonly DefaultAuthorization: IAuthorizationStrategy = authorizationStrategy;
@@ -67,7 +82,7 @@ describe('Express Application', () => {
 
 
     it('Should construct without an application provided', () => {
-        const testApp = new TestApp(<any>appConfig, pipeline, GetRoutes);
+        const testApp = new TestApp(<any>appConfig, pipeline, logger, GetRoutes);
         expect(testApp).toBeDefined();
     });
     
@@ -78,7 +93,7 @@ describe('Express Application', () => {
             callback();
         });
 
-        const app = new TestApp(<any>appConfig, pipeline, GetRoutes, <any>application);
+        const app = new TestApp(<any>appConfig, pipeline, logger, GetRoutes, <any>application);
 
         await app.Listen();
     });
@@ -90,7 +105,7 @@ describe('Express Application', () => {
             callback();
         });
 
-        const app = new TestApp(<any>{}, pipeline, GetRoutes, <any>application);
+        const app = new TestApp(<any>{}, pipeline, logger, GetRoutes, <any>application);
 
         await app.Listen();
     });
@@ -103,7 +118,7 @@ describe('Express Application', () => {
             callback(new Error());
         });
 
-        const app = new TestApp(<any>{}, pipeline, GetRoutes, <any>application);
+        const app = new TestApp(<any>{}, pipeline, logger, GetRoutes, <any>application);
 
         app.Listen()
             .then(() => done('It should have thrown an error'))
@@ -139,7 +154,7 @@ describe('Express Application', () => {
             fn(new Error(), {}, eRes, () => {});
         });
 
-        const app = new TestApp(<any>appConfig, pipeline, GetRoutes, <any>application);
+        const app = new TestApp(<any>appConfig, pipeline, logger, GetRoutes, <any>application);
         app.RegisterErrorHandling();
     });
 
@@ -261,7 +276,7 @@ describe('Express Application', () => {
             handler({}, {}, () => {});
         });
 
-        const app = new TestApp(<any>appConfig, pipeline, GetRoutes, <any>application);
+        const app = new TestApp(<any>appConfig, pipeline, logger, GetRoutes, <any>application);
 
         await app.RegisterRoutes();
     });

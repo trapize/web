@@ -9,7 +9,7 @@ import { ExpressRequest } from './Express.Request';
 import { ExpressResponse } from './Express.Response';
 import { IHttpRequestPipeline } from './IHttp.Request.Pipeline';
 import { HttpActionResult } from './action-results';
-import { Core, IAppConfig } from '@trapize/core';
+import { Core, IAppConfig, ILogger } from '@trapize/core';
 import { WebSymbols } from './Web.Symbols';
 
 /**
@@ -69,8 +69,9 @@ export abstract class ExpressApplication extends HttpApplication {
     public constructor(
         @inject(Core.Configuration.IAppConfig) appConfig: IAppConfig,
         @inject(WebSymbols.IHttpRequestPipeline) pipeline: IHttpRequestPipeline,
+        @inject(Core.Monitor.ILogger) private logger: ILogger,
         @inject(WebSymbols.GetRoutes) @optional() getRoutes?: GetRoutesFunction,
-        @inject(WebSymbols.Express.Application) @optional() app?: express.Application
+        @inject(WebSymbols.Express.Application) @optional() app?: express.Application,
     ) {
         super(appConfig, pipeline, getRoutes);
         this.application = app || express();
@@ -93,7 +94,8 @@ export abstract class ExpressApplication extends HttpApplication {
      */
     public async RegisterErrorHandling(): Promise<void> {
         this.application.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-            console.error(err);
+            //console.error(err);
+            this.logger.Error(err);
             res.status(500).send(HttpActionResult.ServerError.InternalServerError({code: 500, name: 'INTERNAL_SERVER_ERROR', message: 'UNKNOWN'}));
         });
     }
@@ -113,6 +115,7 @@ export abstract class ExpressApplication extends HttpApplication {
         });
         routes.forEach(route => {
             const handler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+                this.logger.Debug('RequestPreExecute', route, req.originalUrl, req.param, req.query, req.body);
                 this.pipeline.Execute(new ExpressRequest(req), new ExpressResponse(res), route, this.container);
             }
 
@@ -131,6 +134,7 @@ export abstract class ExpressApplication extends HttpApplication {
             } else if(route.method === 'OPTIONS') {
                 this.application.options(route.path, handler);
             }
+            this.logger.Info('Route Registered: ', route);
         });
 
     }
