@@ -126,7 +126,6 @@ describe('Express Application', () => {
     });
 
     it('Should Register the errorHandler', (done) => {
-        console.error = jest.fn();
         const eRes = {
             status: jest.fn(),
             send: jest.fn().mockImplementation(data => {
@@ -136,7 +135,7 @@ describe('Express Application', () => {
                 expect(data.error.code).toBe(500);
                 expect(data.error.name).toBe('INTERNAL_SERVER_ERROR');
                 expect(data.error.message).toBe('UNKNOWN');
-                expect(console.error).toHaveBeenCalled();
+                expect(logger.Error).toHaveBeenCalled();
                 done();
             })
         };

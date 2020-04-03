@@ -116,7 +116,7 @@ export abstract class ExpressApplication extends HttpApplication {
         });
         routes.forEach(route => {
             const handler = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-                this.logger.Debug('RequestPreExecute', route, req.originalUrl, req.param, req.query, req.body);
+                this.logger.Debug('RequestPreExecute', route, req.originalUrl, req.params, req.query, req.body);
                 this.pipeline.Execute(new ExpressRequest(req), new ExpressResponse(res), route, this.container);
             }
 
