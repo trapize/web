@@ -1,6 +1,6 @@
 {
   "name": "@trapize/web",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
