@@ -62,6 +62,7 @@ export abstract class ExpressApplication extends HttpApplication {
      *Creates an instance of ExpressApplication.
      * @param {IAppConfig} appConfig
      * @param {IHttpRequestPipeline} pipeline
+     * @param {ILogger} logger
      * @param {GetRoutesFunction} [getRoutes]
      * @param {express.Application} [app]
      * @memberof ExpressApplication
