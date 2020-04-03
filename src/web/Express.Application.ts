@@ -70,7 +70,7 @@ export abstract class ExpressApplication extends HttpApplication {
     public constructor(
         @inject(Core.Configuration.IAppConfig) appConfig: IAppConfig,
         @inject(WebSymbols.IHttpRequestPipeline) pipeline: IHttpRequestPipeline,
-        @inject(Core.Monitor.ILogger) private logger: ILogger,
+        @inject(Core.Monitor.ILogger) protected logger: ILogger,
         @inject(WebSymbols.GetRoutes) @optional() getRoutes?: GetRoutesFunction,
         @inject(WebSymbols.Express.Application) @optional() app?: express.Application,
     ) {
