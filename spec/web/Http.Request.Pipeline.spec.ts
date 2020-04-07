@@ -77,7 +77,7 @@ beforeEach(() => {
 });
 
 function Pipeline(): IHttpRequestPipeline {
-    return new HttpRequestPipeline(authenticationService, authorizationService, cacheService, uniqueService, logger);
+    return new HttpRequestPipeline(authenticationService, authorizationService, cacheService, uniqueService);
 }
 
 describe('Http Request Pipeline', () => {

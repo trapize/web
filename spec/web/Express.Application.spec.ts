@@ -24,8 +24,9 @@ const appConfig = {
 const GetRoutes = jest.fn();
 
 const pipeline = {
-    Execute: jest.fn()
-}
+    Execute: jest.fn(),
+    on: jest.fn()
+};
 
 const logger: ILogger = {
     Info: jest.fn(),
