@@ -76,7 +76,7 @@ export class HttpRequestPipeline implements IHttpRequestPipeline {
             val = HttpActionResult.Create(exception.Code, exception.ToJSON());
             
         } finally {
-            this.emitter.emit('EndRequest', request, route, val);
+            this.emitter.emit('EndRequest', request.uuid, route, val);
             response.status(val.code).send(IsObjectable(val) ? val.ToJSON() : val);
         }
     }
