@@ -70,7 +70,7 @@ export class HttpRequestPipeline implements IHttpRequestPipeline {
             /* istanbul ignore else */
             if(!(e instanceof Exception)) {
                 exception = new WebExceptions.UnhandledException(e.message ? e.message : 'UNKNOWN', e);
-                this.emitter.emit('Error', request, route, exception.ToInternalJSON());
+                this.emitter.emit('Error', request.uuid, route, exception.ToInternalJSON());
             }
             
             val = HttpActionResult.Create(exception.Code, exception.ToJSON());
